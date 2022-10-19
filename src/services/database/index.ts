@@ -1,7 +1,15 @@
 import { connect, connection, model, Schema } from "mongoose";
 
 const connectToDatabase = () => {
-  connect("mongodb://10.0.0.65:27017/chants_desperance");
+  connect(process.env.DB_ADDRESS || "", {
+    dbName: process.env.DB_NAME,
+    authSource: process.env.DB_NAME,
+    auth: {
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+    },
+    authMechanism: "DEFAULT",
+  });
 
   connection.once("open", () =>
     console.log("Connected to MongoDB successfully")

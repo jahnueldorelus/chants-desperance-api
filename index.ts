@@ -1,3 +1,17 @@
+import checkConfig from "./src/startup/config";
+/**
+ * Checks to make sure all required configuration is available
+ * before attempting to continue to run the application
+ */
+const configResults = checkConfig();
+
+if (!configResults.configComplete) {
+  // Logs the error
+  console.log(configResults.error);
+  // Exists the application
+  process.exit(0);
+}
+
 import express from "express";
 import { addServerRoutes } from "./src/startup/routes";
 import { addStartMiddleware, addEndMiddleware } from "./src/startup/middleware";
