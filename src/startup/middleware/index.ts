@@ -17,7 +17,7 @@ export const addStartMiddleware = (server: Express): void => {
         if (
           !origin ||
           (origin && origin.includes("localhost")) ||
-          (origin && origin.includes("10.0.0.15"))
+          (origin && origin.includes("10.0.0.4"))
         ) {
           return callback(null, true);
         }
