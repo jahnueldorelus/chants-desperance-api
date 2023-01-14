@@ -29,7 +29,7 @@ addServerRoutes(server);
 addEndMiddleware(server);
 
 // The port for the server to listen on
-const port: number | string = process.env.PORT ? 4001 : 4000;
+const port: number | string = process.env.PORT ? process.env.PORT : 4000;
 
 // The application
 module.exports = server.listen(port, () => {
