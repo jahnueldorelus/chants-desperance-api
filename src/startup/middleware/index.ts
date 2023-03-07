@@ -13,11 +13,9 @@ export const addStartMiddleware = (server: Express): void => {
   server.use(
     cors({
       origin: (origin, callback) => {
-        // If the request's origin is an acceptable origin (Postman or localhost)
         if (
-          !origin ||
-          (origin && origin.includes("localhost")) ||
-          (origin && origin.includes("10.0.0.4"))
+          origin === process.env.TRUSTED_PROD_ORIGIN ||
+          origin === process.env.TRUSTED_DEV_ORIGIN
         ) {
           return callback(null, true);
         }
