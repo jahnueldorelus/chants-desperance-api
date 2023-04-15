@@ -1,4 +1,4 @@
-import { errorMessages } from "../../services/errorMessages";
+import { errorMessages } from "@services/errorMessages";
 import {
   Request as ExpressRequest,
   Response as ExpressResponse,
@@ -7,11 +7,9 @@ import { StatusCodes } from "http-status-codes";
 
 // The different error methods that are available to be called
 type RequestErrorMethods = {
-  // The error to send with the request */
   badRequest: () => void;
-
-  // The error to send with the request */
   server: () => void;
+  validation: () => void;
 };
 
 // An error object within a network request
@@ -60,6 +58,23 @@ export const RequestError = (
   error: Error
 ): RequestErrorMethods => {
   /**
+   * Creates a request error
+   * @param defaultMessage The default error message
+   * @param status The request's error status
+   * @param errorMessage A custom error message
+   */
+  const createError = (
+    defaultMessage: string,
+    status: StatusCodes,
+    errorMessage?: string
+  ) => {
+    return {
+      errorMessage: errorMessage || defaultMessage,
+      status,
+    };
+  };
+
+  /**
    * Sets the network error as a bad request
    */
   const badRequest = (): void => {
@@ -68,10 +83,11 @@ export const RequestError = (
     // The error message
     const errorMessage = error.message;
     // Adds the error to the request
-    req.failed = {
-      errorMessage: errorMessage ? errorMessage : defaultMessage,
-      status: StatusCodes.BAD_REQUEST,
-    };
+    req.failed = createError(
+      defaultMessage,
+      StatusCodes.BAD_REQUEST,
+      errorMessage
+    );
   };
 
   /**
@@ -82,13 +98,34 @@ export const RequestError = (
     const defaultMessage = errorMessages.serverError;
     // The error message
     const errorMessage = error.message;
+
     // Adds the error to the request
-    req.failed = {
-      errorMessage: errorMessage ? errorMessage : defaultMessage,
-      status: StatusCodes.INTERNAL_SERVER_ERROR,
-    };
+    req.failed = createError(
+      defaultMessage,
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      errorMessage
+    );
+  };
+
+  /**
+   * Sets the network error as a bad request due to validation errors
+   */
+  const validation = (): void => {
+    // The default error message
+    const defaultMessage = errorMessages.validationFail;
+    // The error message
+    const errorMessage = error.message
+      ? `${errorMessages.validationFail} Property ${error.message}`
+      : undefined;
+
+    // Adds the error to the request
+    req.failed = createError(
+      defaultMessage,
+      StatusCodes.BAD_REQUEST,
+      errorMessage
+    );
   };
 
   // Returns the methods available to call
-  return { badRequest, server };
+  return { badRequest, server, validation };
 };

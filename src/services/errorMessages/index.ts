@@ -5,4 +5,5 @@
 export const errorMessages = {
   serverError: "An error occured with server.",
   badRequest: "Bad request.",
+  validationFail: "Validation failed.",
 };

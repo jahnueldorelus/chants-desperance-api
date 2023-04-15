@@ -1,7 +1,7 @@
 import { Request as ExpressRequest } from "express";
-import { RequestError } from "../../../../middleware/requestError";
-import { RequestSuccess } from "../../../../middleware/requestSuccess";
-import { dbCD } from "../../../../services/database";
+import { RequestError } from "@middleware/requestError";
+import { RequestSuccess } from "@middleware/requestSuccess";
+import { dbCD } from "@services/database";
 
 /**
  * Retrieves the data of one category.

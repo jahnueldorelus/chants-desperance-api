@@ -1,8 +1,9 @@
 import { Express, json, static as expressStatic, urlencoded } from "express";
 import helmet from "helmet";
 import cors from "cors";
-import { requestFailedWithError } from "../../middleware/requestError";
-import { requestPassedWithSuccess } from "../../middleware/requestSuccess";
+import { requestFailedWithError } from "@middleware/requestError";
+import { requestPassedWithSuccess } from "@middleware/requestSuccess";
+import { envNames } from "@startup/config";
 
 /**
  * Adds all the starting middleware to the Express server
@@ -14,17 +15,17 @@ export const addStartMiddleware = (server: Express): void => {
     cors({
       origin: (origin, callback) => {
         if (
-          origin === process.env.TRUSTED_PROD_ORIGIN ||
-          origin === process.env.TRUSTED_DEV_ORIGIN
+          origin === process.env[envNames.origins.prod.ui] ||
+          origin === process.env[envNames.origins.prod.api] ||
+          origin === process.env[envNames.origins.dev.ui] ||
+          origin === process.env[envNames.origins.dev.api]
         ) {
           return callback(null, true);
         }
         // If the request's origin is not acceptable
         else {
           return callback(
-            new Error(
-              `This site ${origin} does not have an access. Only specific domains are allowed to access it.`
-            ),
+            new Error(`Access is denied for the site '${origin}'.`),
             false
           );
         }

@@ -4,7 +4,7 @@ import {
   Response as ExpressResponse,
   NextFunction,
 } from "express";
-import { categoryController } from "../../controllers/categories";
+import { categoryController } from "@controllers/categories";
 
 // Express router for category routes
 export const categoriesRouter = Router();
@@ -24,7 +24,7 @@ categoriesRouter.get(
 categoriesRouter.get(
   "/:catId",
   async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
-    const categoryId = req.params.catId;
+    const categoryId = req.params["catId"] || "";
     await categoryController.getCategory(req, categoryId);
 
     // Goes to the next middleware

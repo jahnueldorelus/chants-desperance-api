@@ -1,6 +1,6 @@
 import { Request as ExpressRequest } from "express";
-import { getAllCategories } from "./get/all";
-import { getCategory } from "./get/one";
+import { getAllCategories } from "@controllers/categories/get/all";
+import { getCategory } from "@controllers/categories/get/one";
 
 // Category controller schema
 type Controller = {

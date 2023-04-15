@@ -1,7 +1,7 @@
 import { Express } from "express";
-import { categoriesRouter } from "../../routes/categories";
-import { songsRouter } from "../../routes/songs";
-import { versesRouter } from "../../routes/verses";
+import { categoriesRouter } from "@routes/categories";
+import { songsRouter } from "@routes/songs";
+import { versesRouter } from "@routes/verses";
 
 /**
  * Adds all the routes to an Express server

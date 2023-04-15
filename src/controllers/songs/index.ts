@@ -1,9 +1,9 @@
 import { Request as ExpressRequest } from "express";
-import { getSongsInCategory } from "./get/category";
-import { getAllSongs } from "./get/all";
-import { getSong } from "./get/one";
-import { addSong } from "./add";
-import { getAllFavoriteSongs } from "./get/favorites";
+import { getSongsInCategory } from "@controllers/songs/get/category";
+import { getAllSongs } from "@controllers/songs/get/all";
+import { getSong } from "@controllers/songs/get/one";
+import { addSong } from "@controllers/songs/add";
+import { getFavoriteSongs } from "@controllers/songs/get/favorites";
 
 // Song controller schema
 type Controller = {
@@ -14,10 +14,7 @@ type Controller = {
   getAllSongs: (arg0: ExpressRequest) => Promise<void>;
   getSong: (arg0: ExpressRequest, songId: string) => Promise<void>;
   addSong: (arg0: ExpressRequest) => Promise<void>;
-  getAllFavoriteSongs: (
-    arg0: ExpressRequest,
-    songIds: string[]
-  ) => Promise<void>;
+  getFavoriteSongs: (arg0: ExpressRequest) => Promise<void>;
 };
 
 // Creates the songs controller
@@ -26,5 +23,5 @@ export const songController: Controller = {
   getAllSongs,
   getSong,
   addSong,
-  getAllFavoriteSongs,
+  getFavoriteSongs,
 };

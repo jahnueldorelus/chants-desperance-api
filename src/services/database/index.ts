@@ -1,12 +1,13 @@
+import { envNames } from "@startup/config";
 import { connect, connection, model, Schema } from "mongoose";
 
 const connectToDatabase = () => {
-  connect(process.env.DB_ADDRESS || "", {
-    dbName: process.env.DB_NAME,
-    authSource: process.env.DB_NAME,
+  connect(process.env[envNames.db.address] || "", {
+    dbName: process.env[envNames.db.name],
+    authSource: process.env[envNames.db.name],
     auth: {
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
+      username: process.env[envNames.db.user],
+      password: process.env[envNames.db.password],
     },
     authMechanism: "DEFAULT",
   });
@@ -100,7 +101,25 @@ const connectToDatabase = () => {
     })
   );
 
-  return { categoryModel, songModel, verseModel };
+  const favoriteSongsModel = model(
+    "favorite-songs",
+    new Schema({
+      userId: {
+        type: String,
+        required: true,
+        minlength: 24,
+        maxlength: 24,
+      },
+      songId: {
+        type: String,
+        required: true,
+        minlength: 24,
+        maxlength: 24,
+      },
+    })
+  );
+
+  return { categoryModel, songModel, verseModel, favoriteSongsModel };
 };
 
 export const dbCD = connectToDatabase();

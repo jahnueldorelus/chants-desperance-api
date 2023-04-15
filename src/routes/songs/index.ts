@@ -4,7 +4,7 @@ import {
   Response as ExpressResponse,
   NextFunction,
 } from "express";
-import { songController } from "../../controllers/songs";
+import { songController } from "@controllers/songs";
 
 // Express router for songs routes
 export const songsRouter = Router();
@@ -24,7 +24,7 @@ songsRouter.get(
 songsRouter.get(
   "/all/category/:catId",
   async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
-    const categoryId = req.params.catId;
+    const categoryId = req.params["catId"] || "";
     await songController.getSongsInCategory(req, categoryId);
 
     // Goes to the next middleware
@@ -36,7 +36,7 @@ songsRouter.get(
 songsRouter.get(
   "/:songId",
   async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
-    const songId = req.params.songId;
+    const songId = req.params["songId"] || "";
     await songController.getSong(req, songId);
 
     // Goes to the next middleware
@@ -48,8 +48,7 @@ songsRouter.get(
 songsRouter.post(
   "/favorites",
   async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
-    const favoriteSongsIds = req.body.songIds;
-    await songController.getAllFavoriteSongs(req, favoriteSongsIds);
+    await songController.getFavoriteSongs(req);
 
     // Goes to the next middleware
     next();

@@ -5,6 +5,27 @@ export type CheckConfigReturn = {
   error: string | null;
 };
 
+export const envNames = {
+  nodeEnv: "NODE_ENV",
+  db: {
+    name: "DB_NAME",
+    address: "DB_ADDRESS",
+    user: "DB_USERNAME",
+    password: "DB_PASSWORD",
+  },
+  origins: {
+    prod: {
+      ui: "TRUSTED_PROD_ORIGIN",
+      api: "TRUSTED_PROD_AUTH_API_ORIGIN",
+    },
+    dev: {
+      ui: "TRUSTED_DEV_ORIGIN",
+      api: "TRUSTED_DEV_AUTH_API_ORIGIN",
+    },
+  },
+  port: "PORT",
+};
+
 /**
  * Checks if all config properties are available before starting the server
  */
@@ -15,10 +36,10 @@ export default (): CheckConfigReturn => {
   let errorName: string | null = null;
 
   // Checks database configuration
-  if (!process.env.DB_ADDRESS) errorName = "DB_ADDRESS";
-  else if (!process.env.DB_NAME) errorName = "DB_NAME";
-  else if (!process.env.DB_USERNAME) errorName = "DB_USERNAME";
-  else if (!process.env.DB_PASSWORD) errorName = "DB_PASSWORD";
+  if (!process.env[envNames.db.address]) errorName = envNames.db.address;
+  else if (!process.env[envNames.db.name]) errorName = envNames.db.name;
+  else if (!process.env[envNames.db.password]) errorName = envNames.db.password;
+  else if (!process.env[envNames.db.user]) errorName = envNames.db.user;
 
   return {
     configComplete: errorName ? false : true,

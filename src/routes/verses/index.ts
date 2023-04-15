@@ -4,7 +4,7 @@ import {
   Response as ExpressResponse,
   NextFunction,
 } from "express";
-import { verseController } from "../../controllers/verses";
+import { verseController } from "@controllers/verses";
 
 // Express router for verses routes
 export const versesRouter = Router();
@@ -13,7 +13,7 @@ export const versesRouter = Router();
 versesRouter.get(
   "/song/:songId",
   async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
-    const songId = req.params.songId;
+    const songId = req.params["songId"] || "";
     await verseController.getVersesInSong(req, songId);
 
     // Goes to the next middleware
@@ -25,7 +25,7 @@ versesRouter.get(
 versesRouter.get(
   "/:verseId",
   async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
-    const verseId = req.params.verseId;
+    const verseId = req.params["verseId"] || "";
     await verseController.getVerse(req, verseId);
 
     // Goes to the next middleware
@@ -37,7 +37,7 @@ versesRouter.get(
 versesRouter.post(
   "/new/song/:songId",
   async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
-    const songId = req.params.songId;
+    const songId = req.params["songId"] || "";
     await verseController.addVerses(req, songId);
 
     // Goes to the next middleware

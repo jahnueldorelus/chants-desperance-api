@@ -1,7 +1,7 @@
 import { Request as ExpressRequest } from "express";
-import { getVersesInSong } from "./get/all";
-import { getVerse } from "./get/one";
-import { addVerses } from "./add";
+import { getVersesInSong } from "@controllers/verses/get/all";
+import { getVerse } from "@controllers/verses/get/one";
+import { addVerses } from "@controllers/verses/add";
 
 // Song controller schema
 type Controller = {
