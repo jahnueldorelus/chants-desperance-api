@@ -45,10 +45,32 @@ songsRouter.get(
 );
 
 // Retrieves the list of a user's favorite songs
-songsRouter.post(
+songsRouter.get(
   "/favorites",
   async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
     await songController.getFavoriteSongs(req);
+
+    // Goes to the next middleware
+    next();
+  }
+);
+
+// Adds a song to the user's favorite songs
+songsRouter.post(
+  "/favorites/add",
+  async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
+    await songController.addFavoriteSong(req);
+
+    // Goes to the next middleware
+    next();
+  }
+);
+
+// Removes a song from the user's favorite songs
+songsRouter.post(
+  "/favorites/remove",
+  async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
+    await songController.removeFavoriteSong(req);
 
     // Goes to the next middleware
     next();

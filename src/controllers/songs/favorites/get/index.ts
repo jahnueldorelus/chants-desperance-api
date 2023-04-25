@@ -8,11 +8,12 @@ import Joi from "joi";
 import {
   UserInfo,
   ValidUserInfo,
-} from "@app-types/controllers/songs/get/favorites";
+} from "@app-types/controllers/songs/favorites/get";
+import { favoritesInfoSchema } from "@app-types/controllers/songs/favorites/schema";
 
 // Schema validation
 const UserInfoSchema = Joi.object({
-  userId: Joi.string().token().min(24).max(24).required(),
+  userId: favoritesInfoSchema.userId,
 });
 
 /**
@@ -62,7 +63,9 @@ export const getFavoriteSongs = async (req: ExpressRequest) => {
       // Song info of the user's favorite songs
       const favoriteSongsInfo = await dbCD.songModel
         .find({ _id: { $in: favoriteSongsIds } })
-        .sort({ name: 1, catId: 1, bookNum: 1, lang: 1 });
+        .sort({ catId: 1, bookNum: 1 });
+
+      dbSession.commitTransaction();
 
       RequestSuccess(
         req,
