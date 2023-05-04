@@ -46,6 +46,11 @@ const connectToDatabase = () => {
         required: true,
         minlength: 1,
       },
+      searchName: {
+        type: String,
+        required: true,
+        minlength: 1,
+      },
       catId: {
         type: String,
         required: true,

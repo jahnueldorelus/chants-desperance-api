@@ -24,10 +24,12 @@ export const addStartMiddleware = (server: Express): void => {
         }
         // If the request's origin is not acceptable
         else {
-          return callback(
-            new Error(`Access is denied for the site '${origin}'.`),
-            false
+          const error = new Error(
+            "Access denied. You are unauthorized to access this service."
           );
+          delete error.stack;
+
+          return callback(error, false);
         }
       },
     })
