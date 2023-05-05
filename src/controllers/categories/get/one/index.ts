@@ -2,14 +2,23 @@ import { Request as ExpressRequest } from "express";
 import { RequestError } from "@middleware/requestError";
 import { RequestSuccess } from "@middleware/requestSuccess";
 import { dbCD } from "@services/database";
+import { connection } from "mongoose";
 
 /**
  * Retrieves the data of one category.
  * @param req The network request
  */
 export const getCategory = async (req: ExpressRequest, catId: string) => {
+  const dbSession = await connection.startSession();
+
   try {
-    const category = await dbCD.categoryModel.findOne({ _id: catId });
+    dbSession.startTransaction();
+
+    const category = await dbCD.categoriesModel.findById(catId, null, {
+      session: dbSession,
+    });
+
+    await dbSession.commitTransaction();
 
     if (category) {
       RequestSuccess(req, category.toJSON());
@@ -20,7 +29,12 @@ export const getCategory = async (req: ExpressRequest, catId: string) => {
       ).badRequest();
     }
   } catch (error) {
-    // Default error
+    if (dbSession.inTransaction()) {
+      await dbSession.abortTransaction();
+    }
+
     RequestError(req, Error("Failed to retrieve category.")).server();
+  } finally {
+    await dbSession.endSession();
   }
 };

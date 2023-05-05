@@ -2,6 +2,7 @@ import { Request as ExpressRequest } from "express";
 import { RequestError } from "@middleware/requestError";
 import { RequestSuccess } from "@middleware/requestSuccess";
 import { dbCD } from "@services/database";
+import { connection } from "mongoose";
 
 /**
  * Retrieves the list of songs in a category.
@@ -12,17 +13,28 @@ export const getSongsInCategory = async (
   req: ExpressRequest,
   catId: string
 ) => {
+  const dbSession = await connection.startSession();
+
   try {
-    const songsInCategory = await dbCD.songModel
-      .find({ catId })
+    dbSession.startTransaction();
+
+    const songsInCategory = await dbCD.songsModel
+      .find({ catId }, null, { session: dbSession })
       .sort({ bookNum: 1 });
+
+    await dbSession.commitTransaction();
 
     RequestSuccess(req, songsInCategory);
   } catch (error) {
-    // Default error
+    if (dbSession.inTransaction()) {
+      await dbSession.abortTransaction();
+    }
+
     RequestError(
       req,
       Error("Failed to retrieve the list of songs in given category.")
     ).server();
+  } finally {
+    await dbSession.endSession();
   }
 };

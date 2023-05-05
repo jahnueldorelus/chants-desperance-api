@@ -10,7 +10,7 @@ import { dbCD } from "@services/database";
  */
 export const getVerse = async (req: ExpressRequest, verseId: string) => {
   try {
-    const verse = await dbCD.verseModel.findOne({ _id: verseId });
+    const verse = await dbCD.versesModel.findOne({ _id: verseId });
 
     if (verse) {
       RequestSuccess(req, verse);

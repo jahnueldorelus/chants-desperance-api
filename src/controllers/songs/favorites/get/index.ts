@@ -61,7 +61,7 @@ export const getFavoriteSongs = async (req: ExpressRequest) => {
       );
 
       // Song info of the user's favorite songs
-      const favoriteSongsInfo = await dbCD.songModel
+      const favoriteSongsInfo = await dbCD.songsModel
         .find({ _id: { $in: favoriteSongsIds } })
         .sort({ catId: 1, bookNum: 1 });
 

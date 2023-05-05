@@ -12,7 +12,7 @@ import { Error as MongooseError } from "mongoose";
 export const addVerses = async (req: ExpressRequest, songId: string) => {
   try {
     let versesData = req.body;
-    const song = await dbCD.songModel.findOne({ _id: songId });
+    const song = await dbCD.songsModel.findOne({ _id: songId });
 
     // Checks if user's data contains a valid song Id
     if (!song) {
@@ -31,7 +31,7 @@ export const addVerses = async (req: ExpressRequest, songId: string) => {
       return;
     }
 
-    const verses = await dbCD.verseModel.insertMany(versesData);
+    const verses = await dbCD.versesModel.insertMany(versesData);
 
     RequestSuccess(req, verses);
   } catch (error: any) {

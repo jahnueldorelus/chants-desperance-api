@@ -2,6 +2,7 @@ import { Request as ExpressRequest } from "express";
 import { RequestError } from "@middleware/requestError";
 import { RequestSuccess } from "@middleware/requestSuccess";
 import { dbCD } from "@services/database";
+import { connection } from "mongoose";
 
 /**
  * Retrieves the data of one song.
@@ -9,8 +10,16 @@ import { dbCD } from "@services/database";
  * @param songId The song Id
  */
 export const getSong = async (req: ExpressRequest, songId: string) => {
+  const dbSession = await connection.startSession();
+
   try {
-    const song = await dbCD.songModel.findOne({ _id: songId });
+    dbSession.startTransaction();
+
+    const song = await dbCD.songsModel.findOne({ _id: songId }, null, {
+      session: dbSession,
+    });
+
+    await dbSession.commitTransaction();
 
     if (song) {
       RequestSuccess(req, song.toJSON());
@@ -21,7 +30,12 @@ export const getSong = async (req: ExpressRequest, songId: string) => {
       ).badRequest();
     }
   } catch (error) {
-    // Default error
+    if (dbSession.inTransaction()) {
+      await dbSession.abortTransaction();
+    }
+
     RequestError(req, Error("Failed to retrieve the list of songs.")).server();
+  } finally {
+    await dbSession.endSession();
   }
 };

@@ -77,11 +77,11 @@ songsRouter.post(
   }
 );
 
-// Adds a single song
+// Adds or updates a song
 songsRouter.post(
-  "/new",
+  "/add-or-update",
   async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
-    await songController.addSong(req);
+    await songController.addOrUpdateSong(req);
 
     // Goes to the next middleware
     next();
