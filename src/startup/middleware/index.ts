@@ -18,8 +18,7 @@ export const addStartMiddleware = (server: Express): void => {
           origin === process.env[envNames.origins.prod.ui] ||
           origin === process.env[envNames.origins.prod.api] ||
           origin === process.env[envNames.origins.dev.ui] ||
-          origin === process.env[envNames.origins.dev.api] || 
-          (origin === undefined && process.env[envNames.nodeEnv] !== "production")
+          origin === process.env[envNames.origins.dev.api]
         ) {
           return callback(null, true);
         }

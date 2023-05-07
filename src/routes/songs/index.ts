@@ -9,6 +9,17 @@ import { songController } from "@controllers/songs";
 // Express router for songs routes
 export const songsRouter = Router();
 
+// Deletes a song
+songsRouter.delete(
+  "/",
+  async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
+    await songController.deleteSong(req);
+
+    // Goes to the next middleware
+    next();
+  }
+);
+
 // Retrieves all songs
 songsRouter.get(
   "/all",

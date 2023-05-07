@@ -1,4 +1,4 @@
-import { HydratedDocument, Model } from "mongoose";
+import { ClientSession, HydratedDocument, Model } from "mongoose";
 
 export type ISong = {
   name: string;
@@ -12,6 +12,13 @@ export type ISong = {
 
 export type ISongMethods = {};
 
-export interface SongsModel extends Model<ISong, {}, ISongMethods> {}
+export interface SongsModel extends Model<ISong, {}, ISongMethods> {
+  /**
+   * Deletes a song.
+   * @param songId The id of the song to delete
+   * @param session — The DB session to use
+   */
+  deleteSong: (songId: string, session?: ClientSession) => Promise<boolean>;
+}
 
 export type DBLoadedSong = HydratedDocument<ISong, ISongMethods>;

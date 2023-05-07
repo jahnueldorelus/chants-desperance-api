@@ -126,6 +126,15 @@ export const addOrUpdateSong = async (req: ExpressRequest) => {
           throw Error(errorMessages.badRequest);
         }
 
+        updatedSong.catId = validatedValue.catId;
+        updatedSong.bookNum = validatedValue.bookNum;
+        updatedSong.hasChorus = validatedValue.hasChorus;
+        updatedSong.lang = <"kr" | "fr">validatedValue.lang;
+        updatedSong.numOfVerses = validatedValue.numOfVerses;
+        updatedSong.searchName = validatedValue.searchName;
+        updatedSong.name = validatedValue.name;
+        await updatedSong.save({ session: dbSession });
+
         const deletedAllVerses = await dbCD.versesModel.deleteMany(
           { songId: validatedValue.songId },
           { session: dbSession }
@@ -164,7 +173,6 @@ export const addOrUpdateSong = async (req: ExpressRequest) => {
         RequestSuccess(req, true);
       }
     } catch (error: any) {
-      console.log(error);
       if (dbSession.inTransaction()) {
         await dbSession.abortTransaction();
       }

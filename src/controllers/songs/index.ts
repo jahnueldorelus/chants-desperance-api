@@ -2,6 +2,7 @@ import { Request as ExpressRequest } from "express";
 import { getSongsInCategory } from "@controllers/songs/get/category";
 import { getAllSongs } from "@controllers/songs/get/all";
 import { getSong } from "@controllers/songs/get/one";
+import { deleteSong } from "@controllers/songs/delete/one";
 import { addOrUpdateSong } from "@controllers/songs/add-or-update";
 import { getFavoriteSongs } from "@controllers/songs/favorites/get";
 import { addFavoriteSong } from "@controllers/songs/favorites/add";
@@ -15,6 +16,7 @@ type Controller = {
   ) => Promise<void>;
   getAllSongs: (arg0: ExpressRequest) => Promise<void>;
   getSong: (arg0: ExpressRequest, songId: string) => Promise<void>;
+  deleteSong: (arg0: ExpressRequest) => Promise<void>;
   addOrUpdateSong: (arg0: ExpressRequest) => Promise<void>;
   getFavoriteSongs: (arg0: ExpressRequest) => Promise<void>;
   addFavoriteSong: (arg0: ExpressRequest) => Promise<void>;
@@ -26,6 +28,7 @@ export const songController: Controller = {
   getSongsInCategory,
   getAllSongs,
   getSong,
+  deleteSong,
   addOrUpdateSong,
   getFavoriteSongs,
   addFavoriteSong,
