@@ -22,7 +22,6 @@ export const getAllCategories = async (req: ExpressRequest) => {
 
     RequestSuccess(req, categories);
   } catch (error) {
-    console.log(error);
     if (dbSession.inTransaction()) {
       await dbSession.abortTransaction();
     }
