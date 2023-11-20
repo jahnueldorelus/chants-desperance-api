@@ -1,6 +1,6 @@
 import { Request as ExpressRequest } from "express";
-import { RequestError } from "@middleware/requestError";
-import { RequestSuccess } from "@middleware/requestSuccess";
+import { RequestError } from "@middleware/request-error";
+import { RequestSuccess } from "@middleware/request-success";
 import { dbCD } from "@services/database";
 
 /**

@@ -1,25 +1,27 @@
 import { Express, json, static as expressStatic, urlencoded } from "express";
 import helmet from "helmet";
 import cors from "cors";
-import { requestFailedWithError } from "@middleware/requestError";
-import { requestPassedWithSuccess } from "@middleware/requestSuccess";
+import { requestFailedWithError } from "@middleware/request-error";
+import { requestPassedWithSuccess } from "@middleware/request-success";
 import { envNames } from "@startup/config";
+import cookieParser from "cookie-parser";
 
 /**
  * Adds all the starting middleware to the Express server
  * @param server The Express server to add all the middleware to
  */
 export const addStartMiddleware = (server: Express): void => {
+  const serviceUiOrigin =
+    process.env[envNames.nodeEnv] === "production"
+      ? process.env[envNames.origins.service.ui.prod]
+      : process.env[envNames.origins.service.ui.dev];
+
   // Allows cross-origin requests
   server.use(
     cors({
+      credentials: true,
       origin: (origin, callback) => {
-        if (
-          origin === process.env[envNames.origins.prod.ui] ||
-          origin === process.env[envNames.origins.prod.api] ||
-          origin === process.env[envNames.origins.dev.ui] ||
-          origin === process.env[envNames.origins.dev.api]
-        ) {
+        if (origin === serviceUiOrigin) {
           return callback(null, true);
         }
         // If the request's origin is not acceptable
@@ -46,6 +48,9 @@ export const addStartMiddleware = (server: Express): void => {
 
   // Serves static files from the public folder
   server.use(expressStatic("public"));
+
+  // Parses cookies
+  server.use(cookieParser(<string>process.env[envNames.cookie.key]));
 };
 
 /**

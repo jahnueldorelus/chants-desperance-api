@@ -5,6 +5,7 @@ import {
   NextFunction,
 } from "express";
 import { songController } from "@controllers/songs";
+import { verifyRequestAuthentication } from "@middleware/verify-request-authentication";
 
 // Express router for songs routes
 export const songsRouter = Router();
@@ -58,6 +59,7 @@ songsRouter.get(
 // Retrieves the list of a user's favorite songs
 songsRouter.get(
   "/favorites",
+  verifyRequestAuthentication,
   async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
     await songController.getFavoriteSongs(req);
 
@@ -69,6 +71,7 @@ songsRouter.get(
 // Adds a song to the user's favorite songs
 songsRouter.post(
   "/favorites/add",
+  verifyRequestAuthentication,
   async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
     await songController.addFavoriteSong(req);
 
@@ -80,6 +83,7 @@ songsRouter.post(
 // Removes a song from the user's favorite songs
 songsRouter.post(
   "/favorites/remove",
+  verifyRequestAuthentication,
   async (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
     await songController.removeFavoriteSong(req);
 
