@@ -61,12 +61,17 @@ export const verifyRequestAuthentication = async (
         process.env[envNames.authVerification.path]
       );
       const authVerificationUrl = authDomain + authVerificationPath;
+      const apiOrigin =
+        process.env[envNames.nodeEnv] === "production"
+          ? process.env[envNames.origins.service.api.prod]
+          : process.env[envNames.origins.service.api.dev];
 
       const response = await axios<string>(authVerificationUrl, {
         method: "POST",
         data: { token: validatedValue["sso-token"] },
         headers: {
           "sso-token": encryptedSSOToken,
+          Origin: apiOrigin,
         },
       });
 
@@ -74,15 +79,15 @@ export const verifyRequestAuthentication = async (
 
       next();
     } catch (error) {
+      console.log(error);
       res
         .status(StatusCodes.UNAUTHORIZED)
-        .send("This request is not authorized.");
+        .send("This request is not authorized");
     }
   }
   // If the request is invalid
   else {
-    res
-      .status(StatusCodes.UNAUTHORIZED)
-      .send("This request is not authorized.");
+    console.log("Invalid request");
+    res.status(StatusCodes.UNAUTHORIZED).send("This request is not authorized");
   }
 };
