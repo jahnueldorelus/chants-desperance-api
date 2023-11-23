@@ -1,5 +1,8 @@
-import { ValidReqHeaders, VerifyReqHeaders } from "@app-types/middleware";
-import { reqHeadersSchema } from "@app-types/middleware/schema";
+import {
+  ValidReqHeaders,
+  VerifyReqHeaders,
+} from "@app-types/middleware/verify-request-authentication";
+import { reqHeadersSchema } from "@app-types/middleware/verify-request-authentication/schema";
 import { envNames } from "@startup/config";
 import axios from "axios";
 import {
@@ -53,28 +56,33 @@ export const verifyRequestAuthentication = async (
         process.env[envNames.nodeEnv] === "production"
           ? process.env[envNames.origins.auth.api.prod]
           : process.env[envNames.origins.auth.api.dev];
+
       const authVerificationPath = <string>(
         process.env[envNames.authVerification.path]
       );
-
       const authVerificationUrl = authDomain + authVerificationPath;
 
-      const results = await axios(authVerificationUrl, {
+      const response = await axios<string>(authVerificationUrl, {
         method: "POST",
         data: { token: validatedValue["sso-token"] },
         headers: {
           "sso-token": encryptedSSOToken,
         },
       });
-      req.body.userId = results.data;
+
+      req.body.userId = response.data;
 
       next();
     } catch (error) {
-      res.status(StatusCodes.FORBIDDEN).send("This request is not authorized.");
+      res
+        .status(StatusCodes.UNAUTHORIZED)
+        .send("This request is not authorized.");
     }
   }
   // If the request is invalid
   else {
-    res.status(StatusCodes.FORBIDDEN).send("This request is not authorized.");
+    res
+      .status(StatusCodes.UNAUTHORIZED)
+      .send("This request is not authorized.");
   }
 };
