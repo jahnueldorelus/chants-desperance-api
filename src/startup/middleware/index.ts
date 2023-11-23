@@ -5,6 +5,7 @@ import { requestFailedWithError } from "@middleware/request-error";
 import { requestPassedWithSuccess } from "@middleware/request-success";
 import { envNames } from "@startup/config";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
 
 /**
  * Adds all the starting middleware to the Express server
@@ -51,6 +52,9 @@ export const addStartMiddleware = (server: Express): void => {
 
   // Parses cookies
   server.use(cookieParser(<string>process.env[envNames.cookie.key]));
+
+  // Logs all requests made to the server
+  server.use(morgan("dev"));
 };
 
 /**
